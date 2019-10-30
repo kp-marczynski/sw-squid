@@ -1,0 +1,28 @@
+version: '3.5'
+services:
+  client:
+    container_name: client
+    build: ../.
+    networks:
+      - squid_net
+
+  x1:
+    container_name: z0_x1
+    build: ../.
+    volumes:
+      - ./x1/squid.conf:/etc/squid/squid.conf
+      - ./x1/log:/var/log/squid
+    networks:
+      - squid_net
+
+  x2:
+    container_name: z0_x2
+    build: ../.
+    volumes:
+      - ./x2/squid.conf:/etc/squid/squid.conf
+      - ./x2/log:/var/log/squid
+    networks:
+      - squid_net
+
+networks:
+  squid_net:
