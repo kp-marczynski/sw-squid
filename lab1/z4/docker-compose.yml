@@ -13,7 +13,7 @@ services:
       - ./p1/squid.conf:/etc/squid/squid.conf
       - ./p1/log:/var/log/squid
     networks:
-      - network_outer
+      - network_inner2
 
   p2:
     container_name: z4_p2
@@ -22,7 +22,8 @@ services:
       - ./p2/squid.conf:/etc/squid/squid.conf
       - ./p2/log:/var/log/squid
     networks:
-      - network_outer
+      - network_inner
+      - network_inner2
 
   p3:
     container_name: z4_p3
@@ -32,6 +33,9 @@ services:
       - ./p3/log:/var/log/squid
     networks:
       - network_outer
+      - network_inner
 
 networks:
   network_outer:
+  network_inner:
+  network_inner2:
