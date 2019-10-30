@@ -1,4 +1,4 @@
-version: '3.5'
+version: '2'
 services:
   client:
     container_name: client
@@ -6,7 +6,7 @@ services:
     networks:
       - network_outer
 
-  p1:
+  z2_p1:
     container_name: z2_p1
     build: ../.
     volumes:
@@ -14,9 +14,9 @@ services:
       - ./p1/log:/var/log/squid
     networks:
       - network_outer
-      - network_inner
+      - network_inner_2
 
-  p2:
+  z2_p2:
     container_name: z2_p2
     build: ../.
     volumes:
@@ -24,17 +24,17 @@ services:
       - ./p2/log:/var/log/squid
     networks:
       - network_outer
-      - network_inner
+      - network_inner_2
 
-  p3:
+  z2_p3:
     container_name: z2_p3
     build: ../.
     volumes:
       - ./p3/squid.conf:/etc/squid/squid.conf
       - ./p3/log:/var/log/squid
     networks:
-      - network_inner
+      - network_inner_2
 
 networks:
   network_outer:
-  network_inner:
+  network_inner_2:

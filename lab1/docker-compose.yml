@@ -1,0 +1,90 @@
+version: '2'
+services:
+  client:
+    extends:
+      file: ./z0/docker-compose.yml
+      service: client
+
+  z0_p1:
+    extends:
+      file: ./z0/docker-compose.yml
+      service: z0_p1
+
+  z0_p2:
+    extends:
+      file: ./z0/docker-compose.yml
+      service: z0_p2
+      
+      
+  z1_p1:
+    extends:
+      file: ./z1/docker-compose.yml
+      service: z1_p1
+
+  z1_p2:
+    extends:
+      file: ./z1/docker-compose.yml
+      service: z1_p2
+      
+  z1_p3:
+    extends:
+      file: ./z1/docker-compose.yml
+      service: z1_p3
+      
+      
+  z2_p1:
+    extends:
+      file: ./z2/docker-compose.yml
+      service: z2_p1
+
+  z2_p2:
+    extends:
+      file: ./z2/docker-compose.yml
+      service: z2_p2
+
+  z2_p3:
+    extends:
+      file: ./z2/docker-compose.yml
+      service: z2_p3
+        
+        
+  z3_p1:
+    extends:
+      file: ./z3/docker-compose.yml
+      service: z3_p1
+
+  z3_p2:
+    extends:
+      file: ./z3/docker-compose.yml
+      service: z3_p2
+
+  z3_p3:
+    extends:
+      file: ./z3/docker-compose.yml
+      service: z3_p3
+      
+      
+  z4_p1:
+    extends:
+      file: ./z4/docker-compose.yml
+      service: z4_p1
+
+  z4_p2:
+    extends:
+      file: ./z4/docker-compose.yml
+      service: z4_p2
+
+  z4_p3:
+    extends:
+      file: ./z4/docker-compose.yml
+      service: z4_p3
+
+
+networks:
+  network_outer:
+  network_inner_0:
+  network_inner_1:
+  network_inner_2:
+  network_inner_3:
+  network_inner_4:
+  network_inner_4_2:
