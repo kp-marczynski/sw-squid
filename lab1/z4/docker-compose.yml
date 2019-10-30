@@ -7,24 +7,31 @@ services:
       - network_outer
 
   p1:
-    container_name: z0_p1
+    container_name: z4_p1
     build: ../.
     volumes:
       - ./p1/squid.conf:/etc/squid/squid.conf
       - ./p1/log:/var/log/squid
     networks:
       - network_outer
-      - network_inner
 
   p2:
-    container_name: z0_p2
+    container_name: z4_p2
     build: ../.
     volumes:
       - ./p2/squid.conf:/etc/squid/squid.conf
       - ./p2/log:/var/log/squid
     networks:
-      - network_inner
+      - network_outer
+
+  p3:
+    container_name: z4_p3
+    build: ../.
+    volumes:
+      - ./p3/squid.conf:/etc/squid/squid.conf
+      - ./p3/log:/var/log/squid
+    networks:
+      - network_outer
 
 networks:
   network_outer:
-  network_inner:
