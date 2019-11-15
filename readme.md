@@ -1,4 +1,13 @@
-## Wykonanie testów
+# Readme 
+## Test execution
+   
+### Lab 1
+    
     docker-compose up --build -d
     docker exec -it client bash
-    curl -x z<nr_zadania>_p<nr_maszyny>:3128 http://www.deepsloweasy.com/
+    curl -x z<task_nr>_p<machine_nr>:3128 http://www.deepsloweasy.com/
+
+### lab 2
+
+    docker-compose up --build -d
+And then change system proxy settings to use localhost:3128    
