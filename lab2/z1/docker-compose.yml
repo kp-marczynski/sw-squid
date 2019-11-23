@@ -2,7 +2,7 @@ version: '2'
 services:
   lab2_z1_p1:
     container_name: lab2_z0_p1
-    build: ../.
+    build: .
     volumes:
       - ./p1/squid.conf:/etc/squid/squid.conf
       - ./p1/log:/var/log/squid
