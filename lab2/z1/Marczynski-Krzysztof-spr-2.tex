@@ -1,36 +1,82 @@
-acl manager proto cache_object
-acl localhost src 127.0.0.1/32 ::1
-acl to_localhost dst 127.0.0.0/8 0.0.0.0/32 ::1
-acl localnet src 192.168.56.0/24
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{csquotes}
+\usepackage{todonotes}
+\usepackage{listings}
+\sloppy
 
-acl localnet src 10.0.0.0/8     # RFC1918 possible internal network
-acl localnet src 172.16.0.0/12  # RFC1918 possible internal network
-acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
-acl localnet src fc00::/7       # RFC 4193 local private network range
-acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+\lstset
+{
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+    frame = single,
+}
 
+\titlespacing*{\section}
+{0pt}{5.5ex}{4.3ex}
+\titlespacing*{\subsection}
+{0pt}{5.5ex}{4.3ex}
 
-acl SSL_ports port 443
-acl Safe_ports port 80		# http
-acl Safe_ports port 21		# ftp
-acl Safe_ports port 443		# https
-acl Safe_ports port 70		# gopher
-acl Safe_ports port 210		# wais
-acl Safe_ports port 1025-65535	# unregistered ports
-acl Safe_ports port 280		# http-mgmt
-acl Safe_ports port 488		# gss-http
-acl Safe_ports port 591		# filemaker
-acl Safe_ports port 777		# multiling http
-acl CONNECT method CONNECT
+\title{Systemy webowe\item{SQUID - ACL}}
 
-http_access allow manager localhost
-http_access deny manager
+\author{
+\rule[40pt]{0pt}{0pt}
+  Krzysztof Marczyński\\
+  \texttt{226258}
+}
 
-http_access deny !Safe_ports
+\date{\rule[40pt]{0pt}{0pt} 23.11.2019}
 
-http_access deny CONNECT !SSL_ports
+\begin{document}
 
-###############################################
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+\section{Wprowadzenie}
+Docker...
+
+\section{Pliki ACL}
+\subsection{Użytkownicy - adresy MAC}
+\lstinputlisting[caption=ACL - users/boss.acl]{proxy/acl/users/boss.acl}
+\lstinputlisting[caption=ACL - users/managers.acl]{proxy/acl/users/managers.acl}
+\lstinputlisting[caption=ACL - users/admin.acl]{proxy/acl/users/admin.acl}
+
+\subsection{Podsieci}
+\lstinputlisting[caption=ACL - nets/devs\_designers\_net.acl]{proxy/acl/nets/devs_designers_net.acl}
+\lstinputlisting[caption=ACL - nets/office\_workers\_net.acl]{proxy/acl/nets/office_workers_net.acl}
+
+\subsection{Użytkownicy - konta użytkowników}
+\lstinputlisting[caption=ACL - users/developers.acl]{proxy/acl/users/developers.acl}
+\lstinputlisting[caption=ACL - users/designers.acl]{proxy/acl/users/designers.acl}
+
+\subsection{Strony internetowe}
+\lstinputlisting[caption=ACL - sites/entertainment.acl]{proxy/acl/sites/entertainment.acl}
+\lstinputlisting[caption=ACL - sites/news.acl]{proxy/acl/sites/news.acl}
+\lstinputlisting[caption=ACL - sites/windows\_updates.acl]{proxy/acl/sites/windows_updates.acl}
+
+\subsection{Rozszerzenia plików}
+\lstinputlisting[caption=ACL - files/apps.acl]{proxy/acl/files/apps.acl}
+\lstinputlisting[caption=ACL - files/media.acl]{proxy/acl/files/media.acl}
+\lstinputlisting[caption=ACL - files/office.acl]{proxy/acl/files/office.acl}
+\lstinputlisting[caption=ACL - files/windows\_update.acl]{proxy/acl/files/windows_update.acl}
+
+\section{squid.conf}
+\begin{lstlisting}[caption=Zmiany w pliku squid.conf \label{lst:squid-conf}]
 ##### Authentication setup #####
 # point to file with users and passwords
 auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
@@ -103,31 +149,7 @@ http_access deny office_workers_net entertainment_sites working_hours working_da
 http_access deny office_workers_net !office_ext
 
 http_access allow office_workers_net
-###############################################
+\end{lstlisting}
 
-http_access allow localhost
-http_access allow localnet
-
-http_access deny all
-
-icp_access allow localnet
-
-icp_access deny all
-
-http_port 3128
-
-icp_port 3130
-
-cache_mem 8 MB
-
-coredump_dir /var/spool/squid
-
-refresh_pattern ^ftp:		1440	20%	10080
-refresh_pattern ^gopher:	1440	0%	1440
-refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
-refresh_pattern (Release|Packages(.gz)*)$      0       20%     2880
-refresh_pattern .		0	20%	4320
-
-cache_dir ufs /var/spool/squid 100 16 16
-
-client_netmask 255.255.255.255
+\section{Podsumowanie}
+\end{document}

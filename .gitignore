@@ -1,3 +1,8 @@
 **/log/
 *.iml
 .idea/
+*.log
+*.synctex*
+*.aux
+*.out
+*.toc
