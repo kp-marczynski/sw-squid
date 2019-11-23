@@ -1,0 +1,15 @@
+version: '2'
+services:
+  lab2_z1_p1:
+    container_name: lab2_z0_p1
+    build: ../.
+    volumes:
+      - ./p1/squid.conf:/etc/squid/squid.conf
+      - ./p1/log:/var/log/squid
+    networks:
+      - network_outer
+    ports:
+      - 3128:3128
+
+networks:
+  network_outer:
