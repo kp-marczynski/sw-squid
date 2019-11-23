@@ -1,11 +1,12 @@
 version: '2'
 services:
-  lab2_z1_p1:
-    container_name: lab2_z0_p1
+  lab2_z1_proxy:
+    container_name: lab2_z1_proxy
     build: .
     volumes:
-      - ./p1/squid.conf:/etc/squid/squid.conf
-      - ./p1/log:/var/log/squid
+      - ./proxy/squid.conf:/etc/squid/squid.conf
+      - ./proxy/log:/var/log/squid
+      - ./proxy/acl/:/etc/squid/acl/
     networks:
       - network_outer
     ports:
