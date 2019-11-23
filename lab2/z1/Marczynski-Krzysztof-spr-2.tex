@@ -48,7 +48,48 @@
 
 \newpage
 \section{Wprowadzenie}
-Docker...
+Celem zadania jest przygotowanie filtrów dla środowiska squid z uwzględnieniem następujących reguł:
+
+\begin{itemize}
+    \item Prezes
+    \begin{itemize}
+        \item Korzysta z komputerów o adresach MAC 0800278424BF i 080027810873.
+        \item Nie ma żadnych ograniczeń odnośnie korzystania z sieci.
+    \end{itemize}
+    \item Menadżerowie
+    \begin{itemize}
+        \item Korzystają z komputerów o adresach MAC 080027E7D537, 0800278259C5, 080027C3BEB8.
+        \item Nie mają dostępu do stron rozrywkowych w czasie pracy.
+        \item Nie mają dostępu do stron rozrywkowych w weekendy.
+    \end{itemize}
+    \item Projektanci
+    \begin{itemize}
+        \item Korzystają z komputerów w podsieci 192.168.2.0.
+        \item Muszą się logować w celu odróżnienia od Programistów.
+        \item Nie mają dostępu do stron rozrywkowych przez cały czas.
+        \item Nie mogą pobierać plików multimedialnych.
+        \item Nie mogą pobierać programów z wyłączeniem uaktualnień systemu Windows.
+    \end{itemize}
+    \item Programiści
+    \begin{itemize}
+        \item Korzystają z komputerów w podsieci 192.168.2.0.
+        \item Muszą się logować w celu odróżnienia od Projektantów.
+        \item Nie mają dostępu do stron rozrywkowych przez cały czas.
+        \item Nie mają dostępu do stron prasowych w czasie pracy.
+    \end{itemize}
+    \item Administrator
+    \begin{itemize}
+        \item Korzystaja z komputera o adresie MAC 080027EBD794.
+        \item Nie ma żadnych ograniczeń w czasie pracy.
+        \item Nie ma dostępu do stron rozrywkowych poza czasem pracy.
+    \end{itemize}
+    \item Sekretarka i Księgowa
+    \begin{itemize}
+        \item Korzystają z komputerów w podsieci 192.168.3.0.
+        \item Nie mają dostępu do stron rozrywkowych w godzinach pracy.
+        \item Mogą pobierać tylko pliki związane z pracą biurową.
+    \end{itemize}
+\end{itemize}
 
 \section{Pliki ACL}
 \subsection{Użytkownicy - adresy MAC}
@@ -117,35 +158,48 @@ acl working_hours    time    8:00-16:00
 acl working_days     time    M T W H F
 
 ##### CUSTOM HTTP_ACCESS #####
-# boss
+### boss ###
+# Allow everything
 http_access allow boss
 
-# managers
-http_access deny managers entertainment_sites working_hours
+### managers ###
+# Deny access to entertainment sites during working hours
+http_access deny managers entertainment_sites working_hours working_days
+# Deny access to entertainment sites during weekends
 http_access deny managers entertainment_sites !working_days
 
 http_access allow managers
 
-# designers
+### designers ###
+# Deny access to entertainment sites
 http_access deny devs_designers_net designers entertainment_sites
+# Deny download of media files
 http_access deny devs_designers_net designers media_ext
+# Deny download of apps except Windows Update
 http_access deny devs_designers_net designers apps_ext !windows_update_ext !windows_updates_sites
 
 http_access allow devs_designers_net designers
 
-# developers
+### developers ###
+# Deny access to entertainment sites
 http_access deny devs_designers_net designers entertainment_sites
+# Deny access to news sites during working hours
 http_access deny devs_designers_net designers news_sites working_hours working_days
 
 http_access allow devs_designers_net developers
 
-# admin
-http_access deny admin entertainment_sites !working_hours !working_days
+### admin ###
+# Allow everything during working hours
+http_access allow admin working_hours working_days
+# Deny access to entertainment sites (outside working hours)
+http_access deny admin entertainment_sites
 
 http_access allow admin
 
-# secretary and accountant
+### secretary and accountant ###
+# Deny access to entertainment sites during working hours
 http_access deny office_workers_net entertainment_sites working_hours working_days
+# Deny download of files except basic office files
 http_access deny office_workers_net !office_ext
 
 http_access allow office_workers_net
