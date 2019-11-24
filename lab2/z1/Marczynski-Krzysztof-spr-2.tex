@@ -249,4 +249,12 @@ W przypadku jeśli dany zasób był zabroniony otrzymywano następujące komunik
 W wyniku przeprowadzonych testów stwierdzono, że wszystkie reguły i związane z nimi filtry squid działają w oczekiwany sposób.
 
 \section{Podsumowanie}
+Celem zadania było ograniczenie dostępu do określonych treści użytkownikom pewnej firmy.
+Serwer proxy squid i reguły ACL pozwalają w prosty sposób tego dokonać,
+a poprzez składanie wielu prostych reguł ACL w pojedynczej definicji dostępu http\_access można zdefiniować skomplikowane warunki zależące od wielu czynników.
+\par
+Jednakże na potrzeby tego zadania listy rozszerzeń plików i listy stron były definiowane ręcznie, co może skutkować tym, że wiele nieporządancyh stron czy plików nadal będzie dostępne dla użytkowników.
+O ile rozszerzenia plików są zbiorem względnie możliwym do zdefiniowania przy pewnym nakładzie pracy,
+to ogromna liczba istniejących stron rozrywkowych wyklucza możliwość zablokowania dostępu do wszystkich.
+Częściowym rozwiązaniem tego problemu mogłoby być wykupienie takich list od firm, które specjalizują się w komercyjnym ich tworzeniu i ciągłym poszerzaniu.
 \end{document}
