@@ -91,32 +91,51 @@ Celem zadania jest przygotowanie filtrów dla środowiska squid z uwzględnienie
     \end{itemize}
 \end{itemize}
 
-\section{Pliki ACL}
-\subsection{Użytkownicy - adresy MAC}
-\lstinputlisting[caption=ACL - users/boss.acl]{proxy/acl/users/boss.acl}
-\lstinputlisting[caption=ACL - users/managers.acl]{proxy/acl/users/managers.acl}
-\lstinputlisting[caption=ACL - users/admin.acl]{proxy/acl/users/admin.acl}
+\section{Zewnętrzne pliki ACL}
+Podczas definiowania filtrów dla środowiska squid wykorzystano zewnętrzne pliki ACL podzielone na następujące kategorie:
+\begin{itemize}
+    \item Użytkownicy: adresy MAC - definicje adresów fizycznych komputerów szefa, menadżerów i administratora
+    \item Użytkownicy: konta użytkowników - nazwy kont programistów i projektantów
+    \item Podsieci - podsieci z których korzystają programiści i projektanci oraz pracownicy biurowi (sekretarka i księgowa)
+    \item Strony internetowe - fragmenty nazw domen stron rozrywkowych (społecznościowe, dotyczące memów, filmów, muzyki i pornografii), informacyjnych i zawierających aktualizacje systemu Windows
+    \item Rozszerzenia plików - definicje rozszerzeń plików programów, mediów (muzyka i filmy), biurowych (dokumenty, arkusze kalkulacyjne, prezentacje, pliki skompresowane, graficzne i tekstowe) oraz aktualizacji systemu Windows
+\end{itemize}
+
+\subsection{Użytkownicy: adresy MAC}
+\lstinputlisting[caption=ACL - adresy MAC komputerów szefa - users/boss.acl]{proxy/acl/users/boss.acl}
+\lstinputlisting[caption=ACL - adresy MAC komputerów menadżerów - users/managers.acl]{proxy/acl/users/managers.acl}
+\lstinputlisting[caption=ACL - adresy MAC komputerów administratora - users/admin.acl]{proxy/acl/users/admin.acl}
+
+\subsection{Użytkownicy: konta użytkowników}
+\lstinputlisting[caption=ACL - nazwy kont programistów - users/developers.acl]{proxy/acl/users/developers.acl}
+\lstinputlisting[caption=ACL - nazwy kont projektantów - users/designers.acl]{proxy/acl/users/designers.acl}
 
 \subsection{Podsieci}
-\lstinputlisting[caption=ACL - nets/devs\_designers\_net.acl]{proxy/acl/nets/devs_designers_net.acl}
-\lstinputlisting[caption=ACL - nets/office\_workers\_net.acl]{proxy/acl/nets/office_workers_net.acl}
-
-\subsection{Użytkownicy - konta użytkowników}
-\lstinputlisting[caption=ACL - users/developers.acl]{proxy/acl/users/developers.acl}
-\lstinputlisting[caption=ACL - users/designers.acl]{proxy/acl/users/designers.acl}
+\lstinputlisting[caption=ACL - podsieć z której korzystają programiści i projektanci - nets/devs\_designers\_net.acl]{proxy/acl/nets/devs_designers_net.acl}
+\lstinputlisting[caption=ACL - podsieć z której korzystają sekretarka i księgowa - nets/office\_workers\_net.acl]{proxy/acl/nets/office_workers_net.acl}
 
 \subsection{Strony internetowe}
-\lstinputlisting[caption=ACL - sites/entertainment.acl]{proxy/acl/sites/entertainment.acl}
-\lstinputlisting[caption=ACL - sites/news.acl]{proxy/acl/sites/news.acl}
-\lstinputlisting[caption=ACL - sites/windows\_updates.acl]{proxy/acl/sites/windows_updates.acl}
+\lstinputlisting[caption=ACL - strony rozrywkowe - sites/entertainment.acl]{proxy/acl/sites/entertainment.acl}
+\lstinputlisting[caption=ACL - strony informacyjne - sites/news.acl]{proxy/acl/sites/news.acl}
+\lstinputlisting[caption=ACL - strony z aktualizacjami systemu Windows - sites/windows\_updates.acl]{proxy/acl/sites/windows_updates.acl}
 
 \subsection{Rozszerzenia plików}
-\lstinputlisting[caption=ACL - files/apps.acl]{proxy/acl/files/apps.acl}
-\lstinputlisting[caption=ACL - files/media.acl]{proxy/acl/files/media.acl}
-\lstinputlisting[caption=ACL - files/office.acl]{proxy/acl/files/office.acl}
-\lstinputlisting[caption=ACL - files/windows\_update.acl]{proxy/acl/files/windows_update.acl}
+\lstinputlisting[caption=ACL - rozszerzenia plików programów - files/apps.acl]{proxy/acl/files/apps.acl}
+\lstinputlisting[caption=ACL - rozszerzenia plików mediów - files/media.acl]{proxy/acl/files/media.acl}
+\lstinputlisting[caption=ACL - rozszerzenia plików biurowych - files/office.acl]{proxy/acl/files/office.acl}
+\lstinputlisting[caption=ACL - rozszerzenia plików aktualizacji systemu Windows - files/windows\_update.acl]{proxy/acl/files/windows_update.acl}
 
-\section{squid.conf}
+\section{Zmiany w konfiguracji}
+Konfigurację oparto na pliku squid.conf udostępnionym na eportalu.
+W celu realizacji zadania dopisano konfigurację przedstawioną na listingu \ref{lst:squid-conf}.
+Żeby jednoznacznie określić jak reguły dostępu odzwierciedlają reguły biznesowe kod opisano odpowiednimi komentarzami.
+\par
+Nową konfigurację dopisano do pliku squid.conf pomiędzy następującymi wyrażeniami:
+\begin{itemize}
+    \item http\_access deny CONNECT !SSL\_ports
+    \item http\_access allow localhost
+\end{itemize}
+
 \begin{lstlisting}[caption=Zmiany w pliku squid.conf \label{lst:squid-conf}]
 ##### Authentication setup #####
 # point to file with users and passwords
@@ -143,15 +162,15 @@ acl developers    proxy_auth    "/etc/squid/acl/users/developers.acl"
 acl designers     proxy_auth    "/etc/squid/acl/users/designers.acl"
 
 # sites
-acl entertainment_sites      dstdom_regex    "/etc/squid/acl/sites/entertainment.acl"
-acl news_sites               dstdom_regex    "/etc/squid/acl/sites/news.acl"
-acl windows_updates_sites    dstdom_regex    "/etc/squid/acl/sites/windows_updates.acl"
+acl entertainment_sites      dstdom_regex -i    "/etc/squid/acl/sites/entertainment.acl"
+acl news_sites               dstdom_regex -i    "/etc/squid/acl/sites/news.acl"
+acl windows_updates_sites    dstdom_regex -i    "/etc/squid/acl/sites/windows_updates.acl"
 
 # files
-acl apps_ext              urlpath_regex    "/etc/squid/acl/files/apps.acl"
-acl media_ext             urlpath_regex    "/etc/squid/acl/files/media.acl"
-acl office_ext            urlpath_regex    "/etc/squid/acl/files/office.acl"
-acl windows_update_ext    urlpath_regex    "/etc/squid/acl/files/windows_update.acl"
+acl apps_ext              urlpath_regex -i    "/etc/squid/acl/files/apps.acl"
+acl media_ext             urlpath_regex -i    "/etc/squid/acl/files/media.acl"
+acl office_ext            urlpath_regex -i    "/etc/squid/acl/files/office.acl"
+acl windows_update_ext    urlpath_regex -i    "/etc/squid/acl/files/windows_update.acl"
 
 # time
 acl working_hours    time    8:00-16:00
@@ -182,9 +201,9 @@ http_access allow devs_designers_net designers
 
 ### developers ###
 # Deny access to entertainment sites
-http_access deny devs_designers_net designers entertainment_sites
+http_access deny devs_designers_net developers entertainment_sites
 # Deny access to news sites during working hours
-http_access deny devs_designers_net designers news_sites working_hours working_days
+http_access deny devs_designers_net developers news_sites working_hours working_days
 
 http_access allow devs_designers_net developers
 
@@ -204,6 +223,30 @@ http_access deny office_workers_net !office_ext
 
 http_access allow office_workers_net
 \end{lstlisting}
+
+\section{Testy}
+Na potrzeby testów przygotowano konfigurację Docker Compose przedstawioną na listingu \ref{docker-compose} i Dockerfile przedstawioną na listingu \ref{dockerfile}
+
+\lstinputlisting[caption=Konfiguracja Docker Compose, label=docker-compose]{docker-compose.yml}
+
+\lstinputlisting[caption=Konfiguracja Dockerfile, label=dockerfile]{Dockerfile}
+
+W celu przeprowadzenia testów należało połączyć się z wybranym kontenerem Dockera, a następnie wykonać zapytania curl lub wget ze wskazaniem serwera proxy i, jeśli to konieczne, paremetrów uwierzytelniania użytkownika.
+Przykład pokazano na listingu \ref{lst:test}.
+
+\begin{lstlisting}[caption=Przykładowy test \label{lst:test}]
+docker exec -it dev_designer bash
+curl -x des1:pass@corpo_proxy:3128 https://9gag.com
+wget https://download.ted.com/talks/PaoloCardini_2012G-480p.mp4 -e use_proxy=yes -e https_proxy=http://des1:pass@corpo_proxy:3128
+\end{lstlisting}
+
+W przypadku jeśli dany zasób był zabroniony otrzymywano następujące komunikaty:
+\begin{itemize}
+    \item curl: (56) Received HTTP code 403 from proxy after CONNECT
+    \item wget: Proxy tunneling failed: ForbiddenUnable to establish SSL connection.
+\end{itemize}
+
+W wyniku przeprowadzonych testów stwierdzono, że wszystkie reguły i związane z nimi filtry squid działają w oczekiwany sposób.
 
 \section{Podsumowanie}
 \end{document}

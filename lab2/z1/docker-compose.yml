@@ -1,7 +1,7 @@
 version: '2'
 services:
-  lab2_z1_proxy:
-    container_name: lab2_z1_proxy
+  corpo_proxy:
+    container_name: corpo_proxy
     build: .
     volumes:
       - ./proxy/squid.conf:/etc/squid/squid.conf
@@ -9,8 +9,59 @@ services:
       - ./proxy/acl/:/etc/squid/acl/
     networks:
       - network_outer
+      - devs_designers_net
+      - office_workers_net
     ports:
       - 3128:3128
 
+  boss:
+    container_name: boss
+    build: .
+    mac_address: 08:00:27:84:24:BF
+    networks:
+      - network_outer
+
+  manager:
+    container_name: manager
+    build: .
+    mac_address: 08:00:27:C3:BE:B8
+    networks:
+      - network_outer
+
+  admin:
+    container_name: admin
+    build: .
+    mac_address: 08:00:27:EB:D7:94
+    networks:
+      - network_outer
+
+  dev_designer:
+    container_name: dev_designer
+    build: .
+    networks:
+      - devs_designers_net
+
+  office_worker:
+    container_name: office_worker
+    build: .
+    networks:
+      - office_workers_net
+
 networks:
   network_outer:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.1.1.0/24
+
+  devs_designers_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
+
+  office_workers_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.3.0/24
